@@ -1,7 +1,12 @@
 @layer tokens, base, layout, components;
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   DESIGN SYSTEM
+   DESIGN SYSTEM — shared with studio-spreza
+
+   This token vocabulary (color, type, space, motion) is the canonical Studio
+   Spreza family design system. The sister site studio-spreza mirrors the same
+   tokens; visual differences are content-driven, not stylistic. If a token name
+   here changes, mirror it there to keep the family coherent.
 
    Layers: tokens → base → layout → components (override order).
 

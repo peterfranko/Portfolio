@@ -1,11 +1,15 @@
 # Agents Start Here
 
-Before working on the `Peter Franko` portfolio site, read Compass:
+This site is a **tertiary downstream professional calling card**. Do not use it as product truth; its docs should stay lean and defer app/product meaning to `/Users/peter/Developer/COMPASS.md` and app contexts.
 
-`/Users/peter/Documents/Projects/00-AGENTS-READ-FIRST__COMPASS__CANONICAL-STUDIO-SPREZA-PRODUCT-LANDSCAPE.md`
+## Compass
 
-Compass defines how the personal portfolio should relate to Studio Spreza and the apps: the portfolio is a professional identity and contact surface, while Studio Spreza carries product proof.
+**Tier 1:** `/Users/peter/Developer/COMPASS.md` — Website Strategy summary, Peter Franko guardrails (pre-launch confidentiality), Update Protocol.
 
-Routine Compass update check: update Compass if work changes personal positioning, focus areas, links to Studio Spreza, public claims about Meta/app work, site IA, metadata strategy, or future-agent orientation.
+**Tier 2:** `/Users/peter/Developer/COMPASS-assessment.md` — Peter Franko site assessment.
 
-Do not turn the personal site into a case-study portfolio unless that strategy is explicitly changed and recorded in Compass.
+Present Peter as FTE Product Designer at Meta. **No** Studio Spreza links, app teasers, or “currently building” unless strategy explicitly changes.
+
+Router: `/Users/peter/Developer/AGENTS.md`. Copy: `@portfolio-site-copy`.
+
+**Before done:** `@compass-update-check` if public positioning or contact strategy changed.

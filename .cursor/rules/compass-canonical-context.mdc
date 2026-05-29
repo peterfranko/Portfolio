@@ -1,12 +1,14 @@
 ---
-description: Read and maintain Compass for Peter Franko portfolio context
+description: Compass Tier 1 for Peter Franko site — confidentiality and calling-card role
 alwaysApply: true
 ---
 
-# Compass Required
+# Compass (pf-portfolio)
 
-Before working in this project, read Compass:
+**Tier 0:** Workspace `/Users/peter/Developer/.cursor/rules/compass-core.mdc` and `compass-sites.mdc` when editing site files.
 
-`/Users/peter/Documents/Projects/00-AGENTS-READ-FIRST__COMPASS__CANONICAL-STUDIO-SPREZA-PRODUCT-LANDSCAPE.md`
+**Tier 1:** [COMPASS.md](/Users/peter/Developer/COMPASS.md) — Website Strategy summary, Guardrails (Peter Franko), Update Protocol.
 
-Run a Compass update check before finishing durable changes. Update Compass if work changes personal positioning, Studio Spreza links, focus areas, public claims, website strategy, metadata, or future-agent orientation.
+**Tier 2:** [COMPASS-assessment.md](/Users/peter/Developer/COMPASS-assessment.md) — Peter Franko site assessment and confidentiality notes.
+
+**Before done:** `@compass-update-check`; no Studio Spreza bridges unless strategy explicitly changes.
