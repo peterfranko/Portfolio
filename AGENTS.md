@@ -2,6 +2,8 @@
 
 This site is a **tertiary downstream professional calling card**. Do not use it as product truth; its docs should stay lean and defer app/product meaning to `/Users/peter/Developer/COMPASS.md` and app contexts.
 
+Source control boundary: this site lives under `/Users/peter/Developer/GitHub/` and is Git-backed/GitHub-hosted. This is the exception to the local-only app workspaces under `/Users/peter/Developer/Apps/`.
+
 ## Compass
 
 **Tier 1:** `/Users/peter/Developer/COMPASS.md` — Website Strategy summary, Peter Franko guardrails (pre-launch confidentiality), Update Protocol.
