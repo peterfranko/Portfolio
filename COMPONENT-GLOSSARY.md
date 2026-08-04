@@ -156,4 +156,6 @@ These classes are fully styled in CSS for a future or alternate **project list**
 | `apple-touch-icon.png` | 180px iOS web clip. Opaque `--color-surface-base` backing: iOS ignores media queries and renders transparency black. |
 | `og-image.svg` | Social card for `og:image` / `twitter:image`. |
 
-**Favicon source:** both marks are generated from `/Users/peter/Developer/Assets/pf-light-mode.png` and `pf-dark-mode.png`. The generator trims the source's dead space to the ink bounds and re-centers at 84% fill, so the mark stays legible at 16px. Regenerate both together; they share geometry.
+**Favicon source:** both marks are generated from `/Users/peter/Developer/Assets/pf-light-mode.png` and `pf-dark-mode.png` by `/Users/peter/Developer/Scripts/make-portfolio-favicons.py`. The generator trims the source's dead space to the ink bounds and scales to 84% fill, so the mark stays legible at 16px.
+
+**The source's vertical offset is intentional and is preserved.** The mark sits below its canvas centre (currently 3.5%) to offset the underline making it read top-heavy. The generator measures that deviation as a ratio and re-applies it at every output size, so re-exporting with a different offset carries through without touching the script. Do not "fix" the off-centre framing. Regenerate both marks together; they share geometry.
