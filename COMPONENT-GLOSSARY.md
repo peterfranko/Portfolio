@@ -150,3 +150,10 @@ These classes are fully styled in CSS for a future or alternate **project list**
 | `index.html` | Markup: skip link, layout, aurora SVG, hero, background timeline, contact, footer. |
 | `style.css` | Layers, tokens, and all classes above. |
 | `main.js` | Theme, parallax, reveal. |
+| `favicon-light.png` | PF mark, black on transparent. Served to `prefers-color-scheme: light`. |
+| `favicon-dark.png` | PF mark, white on transparent. Served to `prefers-color-scheme: dark`. |
+| `favicon.ico` | Light-mark fallback (16/32/48/64) for clients that request `/favicon.ico` and ignore the `<link>` tags. |
+| `apple-touch-icon.png` | 180px iOS web clip. Opaque `--color-surface-base` backing: iOS ignores media queries and renders transparency black. |
+| `og-image.svg` | Social card for `og:image` / `twitter:image`. |
+
+**Favicon source:** both marks are generated from `/Users/peter/Developer/Assets/pf-light-mode.png` and `pf-dark-mode.png`. The generator trims the source's dead space to the ink bounds and re-centers at 84% fill, so the mark stays legible at 16px. Regenerate both together; they share geometry.
