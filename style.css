@@ -791,12 +791,36 @@
   }
 
   .hero-name {
-    font-family: var(--font-serif);
-    font-weight: var(--font-weight-light);
-    font-size: var(--text-display);
-    line-height: 0.92;
-    letter-spacing: var(--tracking-tight);
     margin-bottom: var(--space-hero-after-eyebrow);
+    width: min(100%, clamp(16rem, 42vw, 25rem));
+  }
+
+  .hero-name__script {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .hero-name__script--dark {
+    display: none;
+  }
+
+  html[data-theme='dark'] .hero-name__script--light {
+    display: none;
+  }
+
+  html[data-theme='dark'] .hero-name__script--dark {
+    display: block;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    html:not([data-theme]) .hero-name__script--light {
+      display: none;
+    }
+
+    html:not([data-theme]) .hero-name__script--dark {
+      display: block;
+    }
   }
 
   .hero-lede {

@@ -67,7 +67,8 @@ Decorative full-width block above the hero copy. **Not** for essential informati
 | --- | --- |
 | `.hero` | Hero region spacing (top padding, section gap). Used on `<header>`. |
 | `.eyebrow` | Mono, uppercase, muted — role / location line. |
-| `.hero-name` | Display-sized name. |
+| `.hero-name` | Semantic `h1` wrapper for the signature name asset. |
+| `.hero-name__script` | Responsive signature image. Uses `assets/peterfranko-script.png` and inverts in dark mode for contrast. |
 | `.hero-lede` | Intro paragraph; `strong` bumps weight and primary text color. |
 
 ---
@@ -150,6 +151,7 @@ These classes are fully styled in CSS for a future or alternate **project list**
 | `index.html` | Markup: skip link, layout, aurora SVG, hero, background timeline, contact, footer. |
 | `style.css` | Layers, tokens, and all classes above. |
 | `main.js` | Theme, parallax, reveal. |
+| `assets/peterfranko-script.png` | Hero signature image, copied from `/Users/peter/Developer/Assets/peterfranko-script.png`. |
 | `favicon-light.png` | PF mark, black on transparent. Served to `prefers-color-scheme: light`. |
 | `favicon-dark.png` | PF mark, white on transparent. Served to `prefers-color-scheme: dark`. |
 | `favicon.ico` | Light-mark fallback (16/32/48/64) for clients that request `/favicon.ico` and ignore the `<link>` tags. |
