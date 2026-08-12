@@ -50,6 +50,7 @@
     --text-md: 0.72rem;
     --text-body: clamp(1rem, 1.05vw, 1.125rem);
     --text-body-lg: clamp(1.08rem, 1.35vw, 1.38rem);
+    --text-contact: clamp(1.08rem, 1.6vw, 1.45rem);
     --text-lede: clamp(1.85rem, 4.5vw, 3.25rem);
     --text-display: clamp(2.45rem, 7vw, 5.15rem);
     --text-project: clamp(1.85rem, 4vw, 3rem);
@@ -1071,9 +1072,9 @@
     display: inline-block;
     font-family: var(--font-sans);
     font-weight: var(--font-weight-regular);
-    font-size: var(--text-lede);
-    letter-spacing: var(--tracking-lede);
-    line-height: var(--leading-tight);
+    font-size: var(--text-contact);
+    letter-spacing: var(--tracking-caps);
+    line-height: var(--leading-snug);
     color: var(--color-text-primary);
     text-decoration: none;
     /* Resting hairline + hover accent stroke (second layer animates width) */
@@ -1125,7 +1126,7 @@
       100% 1px,
       100% 2px;
     color: var(--color-text-primary);
-    letter-spacing: calc(var(--tracking-lede) + 0.018em);
+    letter-spacing: calc(var(--tracking-caps) + 0.01em);
     transform: translateY(-0.06em);
   }
 

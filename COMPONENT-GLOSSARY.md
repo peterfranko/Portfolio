@@ -101,7 +101,7 @@ Responsive: timeline columns switch to a narrower grid template below 640px.
 
 | Class | Purpose |
 | --- | --- |
-| `.contact-line` | Large italic mailto link with underline styling and hover/focus transitions. |
+| `.contact-line` | Restrained mailto link with underline styling and hover/focus transitions. |
 | `.contact-secondary` | Small mono secondary contact link, currently used for LinkedIn. |
 
 ---
