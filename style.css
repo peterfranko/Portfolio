@@ -14,7 +14,7 @@
    uses subgrid so children can span `layout-full` (viewport-wide) or `layout-prose`
    (center column). Fallback: classic max-width + full-bleed breakout for aurora.
 
-   Typography: fluid type ramps via clamp(); mono for UI chrome, serif for display.
+   Typography: fluid type ramps via clamp(); Instrument Sans for text and labels.
 
    Grid templates: `--grid-columns-*` define repeatable column patterns for lists.
    ═══════════════════════════════════════════════════════════════════════════ */
@@ -38,8 +38,8 @@
     --color-aurora-mist: #a8c4c0;
 
     /* ─── Typography ─── */
-    --font-serif: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
-    --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', monospace;
+    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --font-mono: var(--font-sans);
     --font-weight-light: 400;
     --font-weight-regular: 500;
     --font-weight-medium: 600;
@@ -66,10 +66,10 @@
     --tracking-eyebrow: 0.18em;
     --tracking-wide: 0.15em;
     --tracking-caps: 0.08em;
-    --tracking-tight: -0.028em;
-    --tracking-display: -0.028em;
-    --tracking-lede: -0.015em;
-    --tracking-timeline: -0.01em;
+    --tracking-tight: 0;
+    --tracking-display: 0;
+    --tracking-lede: 0;
+    --tracking-timeline: 0;
 
     /* ─── Space scale ─── */
     --space-1: 0.2rem;
@@ -199,7 +199,7 @@
     position: relative;
     background: var(--color-surface-base);
     color: var(--color-text-primary);
-    font-family: var(--font-serif);
+    font-family: var(--font-sans);
     font-weight: var(--font-weight-light);
     font-size: var(--text-body);
     line-height: var(--leading-relaxed);
@@ -899,7 +899,7 @@
   }
 
   .project-title {
-    font-family: var(--font-serif);
+    font-family: var(--font-sans);
     font-weight: var(--font-weight-regular);
     font-size: var(--text-project);
     line-height: var(--leading-none);
@@ -954,7 +954,7 @@
   }
 
   .project-arrow {
-    font-family: var(--font-serif);
+    font-family: var(--font-sans);
     font-size: 1.25rem;
     color: var(--color-text-muted);
     transform: translate(-0.35em, -0.3em);
@@ -1044,7 +1044,7 @@
   }
 
   .tl-title {
-    font-family: var(--font-serif);
+    font-family: var(--font-sans);
     font-size: var(--text-timeline);
     font-weight: var(--font-weight-regular);
     line-height: var(--leading-snug);
@@ -1069,9 +1069,8 @@
   .contact-line {
     position: relative;
     display: inline-block;
-    font-family: var(--font-serif);
-    font-style: italic;
-    font-weight: var(--font-weight-light);
+    font-family: var(--font-sans);
+    font-weight: var(--font-weight-regular);
     font-size: var(--text-lede);
     letter-spacing: var(--tracking-lede);
     line-height: var(--leading-tight);
