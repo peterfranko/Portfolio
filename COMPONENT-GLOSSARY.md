@@ -70,6 +70,7 @@ Decorative full-width block above the hero copy. **Not** for essential informati
 | `.hero-name` | Semantic `h1` wrapper for the signature name asset. |
 | `.hero-name__script` | Responsive signature image. Uses `assets/peterfranko-script.png` and inverts in dark mode for contrast. |
 | `.hero-lede` | Intro paragraph; `strong` bumps weight and primary text color. |
+| `.hero-lede__accent` | Inline hover accent used for key lede phrases; color variants set orange, jade, and blurple glows. |
 
 ---
 
@@ -78,7 +79,7 @@ Decorative full-width block above the hero copy. **Not** for essential informati
 | Class | Purpose |
 | --- | --- |
 | `.block` | Vertical section spacing. |
-| `.block--contact` | Contact section: top border, column gap, padding. |
+| `.block--contact` | Contact section: centered stack with column gap and top padding. |
 | `.label` | Mono uppercase section title (`h2` resets). |
 | `.label--dim` | Muted label variant (defined for flexibility). |
 
@@ -89,7 +90,7 @@ Decorative full-width block above the hero copy. **Not** for essential informati
 | Class | Purpose |
 | --- | --- |
 | `.timeline` | Vertical stack with left border and padding. |
-| `.tl-row` | Grid row: year column + details (`dt` / `dd`). Marker dot on the border via `dt::before`. |
+| `.tl-row` | Grid row: date range column + details (`dt` / `dd`). Marker dot on the border via `dt::before`; row dividers span the full viewport via `::after`. |
 | `.tl-date-end` | Fainter endpoint year inside the timeline range; inherits the same size and weight as the start year. |
 | `.tl-title` | Primary line (serif). |
 | `.tl-sub` | Secondary line (smaller, secondary color). |
