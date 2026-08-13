@@ -154,12 +154,10 @@ These classes are fully styled in CSS for a future or alternate **project list**
 | `style.css` | Layers, tokens, and all classes above. |
 | `main.js` | Theme, parallax, reveal. |
 | `assets/peterfranko-script.png` | Hero signature image, copied from `/Users/peter/Developer/Assets/peterfranko-script.png`. |
-| `favicon-light.png` | PF mark, black on transparent. Served to `prefers-color-scheme: light`. |
-| `favicon-dark.png` | PF mark, white on transparent. Served to `prefers-color-scheme: dark`. |
-| `favicon.ico` | Light-mark fallback (16/32/48/64) for clients that request `/favicon.ico` and ignore the `<link>` tags. |
-| `apple-touch-icon.png` | 180px iOS web clip. Opaque `--color-surface-base` backing: iOS ignores media queries and renders transparency black. |
+| `favicon-light.png` | Color PF icon. Served to `prefers-color-scheme: light`. |
+| `favicon-dark.png` | Color PF icon. Served to `prefers-color-scheme: dark`. |
+| `favicon.ico` | Color PF fallback (16/32/48/64) for clients that request `/favicon.ico` and ignore the `<link>` tags. |
+| `apple-touch-icon.png` | 180px iOS web clip generated from the color PF icon. Opaque `--color-surface-base` backing: iOS ignores media queries and renders transparency black. |
 | `og-image.svg` | Social card for `og:image` / `twitter:image`. |
 
-**Favicon source:** both marks are generated from `/Users/peter/Developer/Assets/pf-light-mode.png` and `pf-dark-mode.png` by `/Users/peter/Developer/Scripts/make-portfolio-favicons.py`. The generator trims the source's dead space to the ink bounds and scales to 84% fill, so the mark stays legible at 16px.
-
-**The source's vertical offset is intentional and is preserved.** The mark sits below its canvas centre (currently 3.5%) to offset the underline making it read top-heavy. The generator measures that deviation as a ratio and re-applies it at every output size, so re-exporting with a different offset carries through without touching the script. Do not "fix" the off-centre framing. Regenerate both marks together; they share geometry.
+**Favicon source:** all favicon outputs are generated from `/Users/peter/Developer/Assets/pf-color.png` by `/Users/peter/Developer/Scripts/make-portfolio-favicons.py`. Regenerate the full set together so the theme-specific PNGs, fallback ICO, and Apple touch icon stay visually aligned.
