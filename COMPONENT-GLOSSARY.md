@@ -90,6 +90,7 @@ Decorative full-width block above the hero copy. **Not** for essential informati
 | --- | --- |
 | `.timeline` | Vertical stack with left border and padding. |
 | `.tl-row` | Grid row: year column + details (`dt` / `dd`). Marker dot on the border via `dt::before`. |
+| `.tl-date-end` | Fainter endpoint year inside the timeline range; inherits the same size and weight as the start year. |
 | `.tl-title` | Primary line (serif). |
 | `.tl-sub` | Secondary line (smaller, secondary color). |
 

@@ -116,7 +116,7 @@
     --grid-columns-project: auto minmax(0, 1fr) auto;
     --grid-gap-project-meta: clamp(0.75rem, 2vw, 1.35rem);
     --grid-columns-timeline: 5.5rem 1fr;
-    --grid-columns-timeline-sm: 4rem 1fr;
+    --grid-columns-timeline-sm: 5.5rem 1fr;
     --grid-gap-project: clamp(1rem, 3vw, 2.25rem);
     --grid-gap-timeline: clamp(1.25rem, 3vw, 2.5rem);
 
@@ -1036,6 +1036,10 @@
     font-weight: var(--font-weight-regular);
     letter-spacing: var(--tracking-caps);
     color: var(--color-text-muted);
+  }
+
+  .tl-date-end {
+    color: color-mix(in oklab, var(--color-text-muted) 62%, transparent);
   }
 
   .tl-row dd {
