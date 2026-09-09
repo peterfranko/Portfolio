@@ -14,7 +14,9 @@ Source control boundary: this site lives under `/Users/peter/Developer/GitHub/` 
 
 **Tier 2:** `/Users/peter/Developer/COMPASS-assessment.md` — Peter Franko site assessment.
 
-Present Peter as FTE Product Designer at Meta. **No** Studio Spreza links, app teasers, or “currently building” unless strategy explicitly changes.
+Present Peter as a product designer in NYC. **Do not assert a current employer** in copy or metadata: the timeline is history and ends 2023-2026 with no successor line, by Peter's decision on 2026-09-08. The older instruction to present him as an FTE Product Designer at Meta is withdrawn. **No** Studio Spreza links, app teasers, or “currently building” unless strategy explicitly changes, and that includes source comments and asset paths: `style.css` is served publicly and used to name studio-spreza in its header.
+
+**This site's design tokens are its own.** They are not shared with, mirrored to, or derived from Studio Spreza. Peter's decision on 2026-09-08: the site is meant to be meaningfully distinct from all Studio Spreza work. `--color-text-muted` is the contrast floor and must stay at or above 4.5:1 on `--color-surface-base` in both schemes.
 
 Router: `/Users/peter/Developer/AGENTS.md`. Copy: `@portfolio-site-copy`.
 

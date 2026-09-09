@@ -1,19 +1,3 @@
-function getSystemDark() {
-  return window.matchMedia('(prefers-color-scheme: dark)').matches;
-}
-
-function syncMetaThemeColor() {
-  const meta = document.querySelector('meta[name="theme-color"]');
-  if (!meta) return;
-  meta.setAttribute('content', getSystemDark() ? '#141210' : '#f4f0e8');
-}
-
-function initTheme() {
-  syncMetaThemeColor();
-
-  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', syncMetaThemeColor);
-}
-
 function initHeroScrollParallax() {
   const aurora = document.querySelector('.hero-aurora');
   if (!aurora || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
@@ -42,7 +26,6 @@ function initHeroScrollParallax() {
   update();
 }
 
-initTheme();
 initHeroScrollParallax();
 
 const els = document.querySelectorAll('.reveal');
