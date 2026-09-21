@@ -1,6 +1,6 @@
 # Component glossary
 
-This site is a static HTML + CSS + vanilla JS portfolio. **Components** are BEM-style CSS classes grouped in `style.css` under `@layer tokens`, `base`, `layout`, and `components`. Behavior lives in `main.js`.
+Static HTML + CSS + vanilla JS. **Components** are BEM-style classes grouped in `style.css` under `@layer tokens`, `base`, `layout`, and `components`. Behavior lives in `main.js`.
 
 ---
 
@@ -8,127 +8,79 @@ This site is a static HTML + CSS + vanilla JS portfolio. **Components** are BEM-
 
 | Layer | Role |
 | --- | --- |
-| **tokens** | Design tokens: color, typography, space, layout measure, grid templates, motion, z-index. Light/dark via `:root` and `prefers-color-scheme` only. Local to this site: nothing here is shared with or mirrored to another project. `--color-text-muted` is the contrast floor and stays at or above 4.5:1 on `--color-surface-base` in both schemes. |
-| **base** | Resets, `body` surface, links, focus rings, **skip link**, base styles for **contact line** focus. |
-| **layout** | Page shell: three-column grid with optional **subgrid** on `main` so children can span full width or the center “prose” column. |
-| **components** | UI blocks, hero motif, timeline, contact, footer, reveal animation. |
+| **tokens** | Colour, one type scale, space, motion, plus the two metric-matched `@font-face` fallbacks. Light/dark via `:root` and `prefers-color-scheme` only. Local to this site: nothing here is shared with or mirrored to another project. `--ink-3` is the contrast floor and stays at or above 4.5:1 on **both** `--bg` and `--bg-2`, because small type sits on the hover band as well as the page. |
+| **base** | Resets, page surface, links, focus ring, skip link, selection. |
+| **layout** | `.page`: a single-column grid, `1fr` between a header-less top and the footer, `padding-inline: var(--gut)`, and `container-type: inline-size` so `cqi` measures the column rather than the window. |
+| **components** | Hero, index table, contact, footer, reveal. |
+
+**One family.** Archivo, variable, worked across its width axis (62–125). `font-weight` carries weight; `font-variation-settings` carries only `'wdth'`. Do not move weight back into `font-variation-settings`: the browser's own font matching reads `font-weight`, so an axis set only through variation-settings leaves the *fallback* face at 400 wherever the page renders 600.
 
 ---
 
-## Layout primitives
+## Hero
 
 | Class | Purpose |
 | --- | --- |
-| `.layout-page` | Root shell: min-height viewport, three-track grid (gutter \| measure \| gutter). |
-| `.layout-main` | Full-width grid row; when subgrid is supported, becomes a subgrid so descendants align to the same columns. |
-| `.layout-full` | Spans all columns (e.g. full-bleed hero motif). |
-| `.layout-prose` | Center column (~`--layout-measure`), aligned with footer. Hero and sections use this. |
-| `.footer` | Sits in the center track; copyright and meta chrome. |
+| `.hero__name` | Semantic `h1`. Carries a `.vh` "Peter Franko" beside the decorative signature, so the name survives if the SVG does not render. |
+| `.hero__sig` | The signature, inline SVG traced from the brush original. Inline rather than `<img>` because `currentColor` only resolves inside the document; that is what makes one file serve both schemes. Sized `clamp(11rem, 27cqi, 22rem)` — signature scale. Blown past that it reads as a scribble. |
+| `.hero__role` | "Product Designer, NYC", set tight under the signature as its caption rather than as page furniture. |
+| `.hero__stmt` | The statement, and the page's typographic hero. |
+| `.hero__l` | One authored line of the statement. **Block above 30rem, inline below.** |
+| `.hero__stmt em` | The three claims. Accent underline **at rest** so touch and keyboard see them marked; hover draws a heavier stroke beneath and deepens the ink. |
 
-**Fallback:** Without subgrid, `layout-page` falls back to a max-width block; `layout-full` uses negative margin breakout for full-bleed.
+**Show the signature raw.** The trace is already real brush texture. A synthetic ink-bleed filter (`feTurbulence` + `feDisplacementMap`) was tried and reverted: at working size it adds high-frequency fuzz and the mark reads as a bad fax.
 
 ---
 
-## Accessibility & motion
+## Index (background)
+
+| Class | Purpose |
+| --- | --- |
+| `.sec` | Section mark: `BACKGROUND`, `CONTACT`. An `h2` with a rule under it. |
+| `.entry` | One row of the table: `year | title | scope`. Stacks below 58rem, then fully below 40rem. |
+| `.entry__yr` | The span, tabular lining figures, with a rule between the two years. |
+| `.entry::before` | The hover band. Bleeds a gutter past the column so a live row reads as a band across the sheet rather than a boxed rectangle. |
+
+**Both dividers touching a live row fade with the band**, on the same curve: the row's own `border-bottom`, and the one belonging to the row above via `.entry:has(+ .entry:hover)`. For the first row that neighbour is the section rule, so `.sec` fades too — otherwise the band sits pinned under a line it did not erase.
+
+**Touch has no hover**, so the row nearest the middle of the screen is the live one, driven by `animation-timeline: view()` through the registered `--live`.
+
+---
+
+## Contact and footer
+
+| Class | Purpose |
+| --- | --- |
+| `.contact__mail` | Primary action. Serif-free, large, with an arrow that moves on hover. |
+| `.contact__arr` | Decorative, `aria-hidden`. |
+| `.contact__alt` | LinkedIn, small uppercase. |
+| `.foot` | Top rule, copyright. |
+
+Both contact links keep a typographic box and expand only the hit area, via a 44px-tall `::after`. **They are the only two links on the page; do not let that expander get dropped again.**
+
+---
+
+## Motion and accessibility
 
 | Name | Purpose |
 | --- | --- |
-| `.skip-link` | Off-screen until focused; jumps to `#main`, which carries `tabindex="-1"` so focus actually lands there in Safari. |
-| `.visually-hidden` | Text for assistive tech only. Carries the real "Peter Franko" beside the decorative wordmark, so the name survives even if the SVG does not render. |
-| `.reveal` | Starts hidden (opacity + translate); gains `.visible` when scrolled into view. Stagger via inline `--d` (index × `--reveal-stagger`). |
-| `prefers-reduced-motion` | Disables hero animations, reveal transitions and smooth scrolling; reveals content immediately. |
-| `scripting: none` | Reveals content immediately when JavaScript never runs. A `<noscript>` style block in `index.html` does the same for Safari before 17. |
+| `.skip` | Off-screen until focused; jumps to `#main`, which carries `tabindex="-1"` so focus actually lands there in Safari. |
+| `.vh` | Text for assistive tech only. |
+| `.reveal` / `.in` | Index rows only. Uses `translate`, **not** `transform` — as `transform` it outranks `.entry`'s own transform and silently kills the row's hover response. |
+| `prefers-reduced-motion` | Disables the signature write-on and every transition; reveals content immediately. |
+| `scripting: none` | Reveals content immediately when JS never runs. A `<noscript>` style block in `index.html` does the same for Safari before 17. |
 
-**JS:** `IntersectionObserver` adds `.visible` once per element; if unsupported, all `.reveal` elements get `.visible` immediately.
+**Load-bearing:** the whole background list sits inside `.reveal`, so removing both no-JS fallbacks leaves a visitor with four empty rows. Test that path before touching either.
 
-**Load-bearing:** every word on the page sits inside a `.reveal`, so removing both no-JS fallbacks leaves a visitor with an empty gradient. Test that path before touching either.
-
----
-
-## Hero motif (aurora)
-
-Decorative full-width block above the hero copy. **Not** for essential information (`aria-hidden="true"` on the container).
-
-| Class | Role |
-| --- | --- |
-| `.hero-aurora` | Container: height clamp, bottom fade mask, entry animation. Uses `--parallax-y` (set by JS) for scroll parallax. |
-| `.hero-aurora__backing` | Parallax layer for wash + mesh + grain (moves with scroll). |
-| `.hero-aurora__wash` | Soft radial gradients (theme-aware). |
-| `.hero-aurora__mesh` | Dot grid overlay with drift animation. |
-| `.hero-aurora__grain` | SVG noise texture for grain. |
-| `.hero-aurora__schema` | SVG layer: schematic lines; parallax opposite to backing. |
-| `.hero-aurora__drift` | Slow drift animation on the SVG group. |
-| `.hero-aurora__ln` | Base stroke for SVG paths/lines. Modifiers: `--hairline`, `--fine`, `--medium`, `--ghost`; line styles `--solid`, `--dash`, `--dot`. |
-| `.hero-aurora__node` | Small circles on the schema. Modifier: `--soft`. |
-
-**JS:** `initHeroScrollParallax()` updates `--parallax-y` on scroll/resize unless `prefers-reduced-motion: reduce`.
+**`@property` registrations sit at the very top of the file.** `--w` (the signature write-on mask) and `--live` (the row state). An unregistered custom property cannot interpolate — the keyframe flips discretely at 50% and the "stroke" becomes a hard cut.
 
 ---
 
-## Hero copy
+## Two traps worth keeping written down
 
-| Class | Purpose |
-| --- | --- |
-| `.hero` | Hero region spacing (top padding, section gap). Used on `<header>`. |
-| `.eyebrow` | Uppercase, tracked, muted: the role and location line. |
-| `.hero-name` | Semantic `h1`: a `.visually-hidden` name followed by the decorative wordmark. |
-| `.hero-name__script` | The signature, an inline SVG traced from the original brush raster. Inline rather than `<img>` because `currentColor` only resolves inside the document; that is what makes one file serve both schemes. |
-| `.hero-lede` | Intro paragraph; `strong` bumps weight and primary text color. |
-| `.hero-lede__accent` | Inline hover accent used for key lede phrases; color variants set orange, jade, and blurple glows. |
+**Never measure in `ch`.** It is font-relative, so a fallback face silently re-wraps the text — it changed the hero statement's line count on every cold load, and it made the width unmeasurable, because what moved was the wrap point rather than the text. The statement's two lines are authored; `.entry__d` is capped in `rem`.
 
----
-
-## Section shell
-
-| Class | Purpose |
-| --- | --- |
-| `.block` | Vertical section spacing. |
-| `.block--contact` | Contact section: centered stack with column gap and top padding. |
-
-Both `<section>` elements carry an `aria-label`, otherwise they expose as unnamed regions.
-
----
-
-## Timeline (background)
-
-| Class | Purpose |
-| --- | --- |
-| `.timeline` | Vertical stack with left border and padding. |
-| `.tl-row` | Grid row: date range column + details (`dt` / `dd`). Marker dot on the border via `dt::before`; row dividers span the full viewport via `::after`. |
-| `.tl-title` | Primary line. |
-| `.tl-sub` | Secondary line (smaller, secondary color). |
-
-Rows run newest first. Each `<dt>` is one string with an en dash, not two spans: a faded second half measured 1.96:1 and read to a screen reader as two fragments.
-
-Responsive: a narrower date column below 640px, and a single stacked column below 22rem where two columns starve the title.
-
----
-
-## Contact
-
-| Class | Purpose |
-| --- | --- |
-| `.contact-line` | Restrained mailto link with underline styling and hover/focus transitions. |
-| `.contact-secondary` | Small uppercase secondary contact link, currently used for LinkedIn. |
-
-Both links keep a typographic box and expand only the hit area, via a 44px-tall `::after`. There is one type family on this site, Instrument Sans; the old `--font-mono` token aliased it and has been removed.
-
----
-
-## Footer
-
-| Class | Purpose |
-| --- | --- |
-| `.footer` | Top border, uppercase muted text; flex for future left/right split. |
-
----
-
-## JavaScript (`main.js`)
-
-| Behavior | Description |
-| --- | --- |
-| **Hero parallax** | Sets `--parallax-y` on `.hero-aurora` from scroll position (skipped when reduced motion is preferred). |
-| **Reveal** | IntersectionObserver adds `.visible` to `.reveal` elements. |
+**Optical edge.** Every block is flush to the same box; ink is not. The signature trace starts at its box edge, while type carries a left side bearing that grows with size — the statement sat 5.35px inside it. Each role takes an em-based `text-indent` (a `margin-left` on `.entry__yr`, which is a flex container and so does not take `text-indent`). Measured spread: 0.01px. Re-measure against `path.getBBox()`, not the viewBox, if the type scale changes.
 
 ---
 
@@ -136,13 +88,23 @@ Both links keep a typographic box and expand only the hit area, via a 44px-tall 
 
 | File | Contents |
 | --- | --- |
-| `index.html` | Markup: skip link, layout, aurora SVG, hero, background timeline, contact, footer. |
-| `style.css` | Layers, tokens, and all classes above. |
-| wordmark | Inline in `index.html`, not a file. Regenerate from `/Users/peter/Developer/Assets/peterfranko-script-light.png` with `/Users/peter/Developer/Scripts/trace-wordmark.py`. |
-| `main.js` | Parallax and reveal. Theme color is now two `<meta>` tags with `media`, no JS. |
-| `favicon.png` | Color PF icon. One file: the former light and dark pair were byte-identical, so the media split bought nothing. |
-| `favicon.ico` | Color PF fallback (16/32/48/64) for clients that request `/favicon.ico` and ignore the `<link>` tags. |
-| `apple-touch-icon.png` | 180px iOS web clip generated from the color PF icon. Opaque `--color-surface-base` backing: iOS ignores media queries and renders transparency black. |
-| `og-image.png` | Social card for `og:image` / `twitter:image`, 1200×630, absolute URL. It must stay a PNG: no major scraper renders SVG, and the SVG it replaced also carried a raw `0xB7` byte that is invalid UTF-8. Regenerate with `/Users/peter/Developer/Scripts/make-og-card.py`. |
+| `index.html` | Markup: skip link, head metadata, hero, index, contact, footer. |
+| `style.css` | Layers, tokens, fallback faces, and all classes above. |
+| signature | Inline in `index.html`, not a file. Regenerate from `/Users/peter/Developer/Assets/peterfranko-script-light.png` with `/Users/peter/Developer/Scripts/trace-wordmark.py`. |
+| `main.js` | The reveal observer. Nine lines. Theme colour is two `<meta>` tags with `media`, no JS. |
+| `favicon.png` | Colour PF icon. |
+| `favicon.ico` | Colour PF fallback (16/32/48/64) for clients that request `/favicon.ico` and ignore the `<link>` tags. |
+| `apple-touch-icon.png` | 180px iOS web clip. Opaque backing: iOS ignores media queries and renders transparency black. |
+| `og-image.png` | Social card for `og:image` / `twitter:image`, 1200×630, absolute URL. It must stay a PNG: no major scraper renders SVG. Regenerate with `/Users/peter/Developer/Scripts/make-og-card.py`. |
 
-**Favicon source:** all favicon outputs are generated from `/Users/peter/Developer/Assets/pf-color.png` by `/Users/peter/Developer/Scripts/make-portfolio-favicons.py`. Regenerate the full set together so the PNG, fallback ICO, and Apple touch icon stay visually aligned; the script still emits a light/dark pair, and only one of them is kept.
+**Favicon source:** all favicon outputs are generated from `/Users/peter/Developer/Assets/pf-color.png` by `/Users/peter/Developer/Scripts/make-portfolio-favicons.py`. Regenerate the full set together so the PNG, fallback ICO, and Apple touch icon stay visually aligned.
+
+---
+
+## The fallback faces
+
+Two, not one. Helvetica ships Regular and Bold, so a single `size-adjust` cannot serve the page: the fallback renders Regular against Archivo 400 and Bold against Archivo 600, and those need different corrections. Both values were solved by measuring the **rendered boxes** — canvas snaps a variable font to the nearest static weight and lies about anything in between, and a probe `@font-face` behaves differently from the real one.
+
+`local()` resolves to a *named* face: `local('Helvetica Neue')` is Regular whatever `font-weight` range the `@font-face` claims, and declaring that range suppresses the substitution that would otherwise have happened. The bold face has to ask for Bold by name.
+
+Perfect matching across every string is not reachable — the two typefaces differ per character. What these are for is keeping **line counts** stable on swap, and that is exact.
