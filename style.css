@@ -239,18 +239,22 @@
   @media (max-width: 30rem) { .hero__l { display: inline; } }
 
   /* Terminal punctuation hangs. Both authored lines end in a mark carrying
-     0.257em of advance — 20.56px at the desktop step — and a centred line
-     counts that advance, so the letterforms sat 10.28px left of the axis
-     the signature is centred on, on both lines equally.
-       The mark keeps its glyph and gives up its box. That is exact for any
-     mark at any step of a fluid scale, where a measured negative margin
-     would be wrong the moment the copy or the type scale moved — and this
-     scale runs 24px to 80px.
-       Only while the lines are authored blocks. At 30rem and below they
-     run together as one wrapping sentence and the marks stop being line-
-     terminal, where a zero-width one would sit on the word after it.     */
+     0.257em of advance — 20.56px at the desktop step, the same for the
+     comma and the period — and a centred line counts that advance, so the
+     letterforms sat 10.28px left of the axis the signature is centred on.
+       Indenting the line by the mark's whole advance is the hang: a centred
+     line moves by HALF its own indent, which is exactly the half-advance
+     the mark was costing. Same ink positions as giving the mark a zero-width
+     box, and it needs no span in the markup, which is the point — a
+     zero-width box is invisible to ::selection, so the mark dropped out of
+     the accent band while the rest of the line was highlighted.
+       Only while the lines are authored blocks. At 30rem and below they go
+     inline, the marks stop being line-terminal, and text-indent stops
+     applying to an inline box on its own — so this switches itself off.
+       Re-measure if the copy or the family changes: a line ending in a
+     different mark wants a different number.                            */
   @media (width > 30rem) {
-    .hero__hang { display: inline-block; width: 0; }
+    .hero__l { text-indent: 0.257em; }
   }
 
   .hero__stmt em {
@@ -461,8 +465,7 @@
   .contact { padding-top: var(--gap-section); }
 
   .contact__mail {
-    display: flex; align-items: center; justify-content: center; flex-wrap: wrap;
-    gap: 0 clamp(var(--s-3), 1.6cqi, var(--s-5));
+    display: block;
     width: fit-content; max-width: 100%;
     margin: clamp(var(--s-5), 3vw, var(--s-7)) auto 0;
     font-size: var(--t-mail);
@@ -471,39 +474,50 @@
     line-height: var(--lead-snug);
     letter-spacing: -0.022em;
     color: var(--ink);
-    transition: color var(--fast) var(--ease);
+    /* Hover swells it on Archivo's axes, the same gesture as the claims in
+       the statement. It used to draw an accent rule in from the left, which
+       is the one gesture this page no longer makes anywhere. */
+    transition:
+      font-weight 0.38s cubic-bezier(0.4, 0.05, 0.25, 1),
+      font-variation-settings 0.38s cubic-bezier(0.4, 0.05, 0.25, 1),
+      color var(--fast) var(--ease);
   }
-  .contact__mail-t {
-    background-image: linear-gradient(var(--accent), var(--accent));
-    background-size: 0% 0.07em;
-    background-position: 0 100%;
-    background-repeat: no-repeat;
-    transition: background-size var(--slow) var(--ease);
-    overflow-wrap: anywhere;
-    min-width: 0;
-  }
+  .contact__mail-t { overflow-wrap: anywhere; }
+  /* The arrow hangs off the address, the way the statement's terminal
+     punctuation hangs off its line: out of flow, so it costs the link no
+     width. Three things follow from that.
+       The link box IS the address, so `margin-inline: auto` centres the
+     address itself on the page axis. No counterweight, and the 22rem
+     breakpoint that used to drop the counterweight goes with it.
+       The focus ring hugs the address. As a flex item the arrow put 48.6px
+     of dead space inside the ring on the left, while its own hover translate
+     carried it 7.7px outside the ring on the right.
+       The hit area is the one thing that must still cover both, so the 44px
+     expander below reaches out past the arrow rather than stopping at the
+     link's box. */
   .contact__arr {
-    width: 0.62em; height: 0.62em; flex: none;
+    position: absolute;
+    left: 100%;
+    top: 50%;
+    margin-top: -0.31em;          /* half its own 0.62em */
+    margin-left: clamp(var(--s-3), 1.6cqi, var(--s-5));
+    width: 0.62em; height: 0.62em;
     transition: transform var(--med) var(--ease), color var(--fast) var(--ease);
   }
-  /* The arrow is a trailing mark, not part of the address. Centring the flex
-     box on its own would carry the email — the thing the eye reads as centred
-     — left by half the arrow plus its gap. A matching empty item on the other
-     side puts the address itself on the page's axis and lets the arrow hang
-     off it.
-       It is dropped on the narrowest phones, because the thing that breaks
-     first is not the address wrapping: the flex box wraps and the ARROW
-     drops to its own line under the email. Measured against Archivo, which
-     is the worst case here — the Helvetica fallback renders this string
-     2.6px narrower, not wider — the balanced box is 283.3px and the arrow
-     falls off the line at 320px viewport and holds at 328px. 22rem keeps a
-     24px cushion over that, and costs only 320-351px the 12px of offset. */
-  .contact__mail::before { content: ''; width: 0.62em; flex: none; }
-  @media (max-width: 22rem) { .contact__mail::before { content: none; } }
-
   .contact__mail:hover, .contact__mail:focus-visible { color: var(--accent-deep); }
-  .contact__mail:hover .contact__mail-t, .contact__mail:focus-visible .contact__mail-t { background-size: 100% 0.07em; }
   .contact__mail:hover .contact__arr, .contact__mail:focus-visible .contact__arr { transform: translate(0.16em, -0.16em); }
+  /* Pointer only, and hover only: a tap would latch a swollen address, and a
+     focus ring that resized itself would be worse than one that does not.
+       Above 30rem as well, which is the same gate the statement's claims
+     take, for the same reason measured on this element: at a 320px viewport
+     the column is 283.2px and the swollen address needs more, so it breaks
+     across two lines and carries the arrow 9px off the right of the screen.
+     It clears comfortably from 30rem up — 299.8px in a 460px column at
+     500px, 35% spare — and below it the address answers in colour and the
+     arrow still moves. */
+  @media (hover: hover) and (width > 30rem) {
+    .contact__mail:hover { font-weight: 760; font-variation-settings: 'wdth' 118; }
+  }
 
   /* The visual box stays typographic; the hit area is expanded behind it so a
      thumb has 44px to land on. Both links measured 20-22px tall without it. */
@@ -515,6 +529,10 @@
     inset: 50% 0 auto;
     height: 44px;
     transform: translateY(-50%);
+  }
+  /* out past the hanging arrow, which is no longer inside the link's box */
+  .contact__mail::after {
+    right: calc(-1 * (0.62em + clamp(var(--s-3), 1.6cqi, var(--s-5))));
   }
 
   .contact__alt {
@@ -568,6 +586,27 @@
     .hero__stmt { max-width: none; }
   }
 
+  /* ── Touch-capable pointers drop the swell ──────────────────────────
+     `hover: hover` describes the PRIMARY pointer, so a touchscreen laptop
+     and an iPad on a trackpad both match it — and on those a finger tap
+     latches :hover until you tap elsewhere. Measured on an emulated phone:
+     the element does latch (`:hover` stays true well past the transition),
+     it just renders nothing because `hover: hover` is false there. Where it
+     is true, a tap would leave the word swollen and the line held in its
+     reflowed position for as long as the latch lasts.
+       `any-pointer: coarse` is true of any device that HAS a touchscreen,
+     whatever it leads with, so this is the one query that separates them.
+     The colour and the arrow still answer; only the axes are pinned.
+       The cost, accepted deliberately: an iPad driven by a Magic Keyboard
+     trackpad loses the swell too, because the same machine can be touched
+     and CSS cannot ask which one is being used right now. The page's other
+     hovers latch the same way; these are the two that move layout, which is
+     why only these two are guarded. */
+  @media (any-pointer: coarse) {
+    .hero__stmt em:hover { font-weight: 620; font-variation-settings: 'wdth' 100; }
+    .contact__mail:hover { font-weight: 600; font-variation-settings: 'wdth' 104; }
+  }
+
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after { animation: none !important; transition: none !important; }
     .reveal { opacity: 1; translate: 0 0; }
@@ -582,5 +621,6 @@
       font-variation-settings: 'wdth' 100;
       color: var(--accent-deep);
     }
+    .contact__mail:hover { font-weight: 600; font-variation-settings: 'wdth' 104; }
   }
 }

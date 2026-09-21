@@ -32,7 +32,6 @@ Because the dark value is lighter than `--accent`, a hovered word there sits one
 | `.hero__role` | "Product Designer, NYC", set tight under the signature as its caption rather than as page furniture. |
 | `.hero__stmt` | The statement, and the page's typographic hero. |
 | `.hero__l` | One authored line of the statement. **Block above 30rem, inline below.** |
-| `.hero__hang` | The line's terminal comma or period. Zero-width above 30rem so the mark hangs off the centred axis; a plain inline below it. |
 | `.hero__stmt em` | The three claims. Accent underline **at rest** so touch and keyboard see them marked; on hover the word swells on Archivo's own axes and takes `--accent-deep`. See *The statement hover* below — it is the one thing on the page that moves layout. |
 
 **The statement hover: the word swells, the sentence breathes.** (Replaced a left-to-right stroke wipe, 2026-09-21.) On hover the claim goes `font-weight` 620 → 780 and `wdth` 100 → 118 and takes `--accent-deep`, on the signature's own easing curve. Nothing is drawn that was not already type: no bar, no band, no second object. The rest-state hairline stays and widens with the word it belongs to.
@@ -44,8 +43,10 @@ Weight goes in `font-weight` and width in `font-variation-settings`, per *One fa
 Three guards, and the third is the one that matters:
 
 - **Only above 30rem.** Below it the two authored lines go inline and become one wrapping sentence, where a swelling word could move the **wrap point** and reflow the whole statement. Same breakpoint the hanging punctuation uses. Below it the claims answer in colour only.
-- **Only on a real pointer.** `hover: hover` already gated this; it matters more now, because a tap that resized the sentence would be a bug.
+- **Only on a real pointer, and only on one that cannot also be touched.** `hover: hover` describes the *primary* pointer, so a touchscreen laptop and an iPad on a trackpad both match it — and on those a finger tap latches `:hover` until you tap elsewhere, which would leave the word swollen and the line held in its reflowed position. `@media (any-pointer: coarse)` is true of any device that *has* a touchscreen whatever it leads with, so a second block pins the axes back there. Colour and the arrow still answer; only the axes are pinned. **The accepted cost:** an iPad driven by a Magic Keyboard trackpad loses the swell too, because the same machine can be touched and CSS cannot ask which input is in use right now. Every other hover on the page latches the same way; these two are guarded because they are the two that move layout.
 - **The line has the headroom — measured, not assumed.** Swelling the widest claim on line 2 takes it to 83.3% of the column at 500px (the tightest point of the block regime), 83.2% at 700px, 74.4% at 1280px, 58.6% at 1600px. Worst case leaves a sixth of the column spare, so it can never re-wrap or cross the gutter. **Re-measure if the copy grows: the guard is the measurement, not the breakpoint.**
+
+**Both guards were tested by making them fail on purpose**, not by reading them: the query was flipped from `coarse` to `fine` — true on a pointer-only desktop — which suppressed both swells (620/`wdth` 100 and 600/`wdth` 104) while the colour and the arrow still answered, then flipped back and the swell returned (780/`wdth` 118). A guard nobody has seen fire is a guess.
 
 **Reduced motion drops the swell, not just the transition.** The blanket `transition: none !important` would have left it as a *snap* — the sentence jumping to a new width on pointer-enter and back on leave, which is precisely what that setting asks us not to do. So the axes are pinned to their rest values there and the claim answers in colour alone. It works by source order: same selector, same specificity, same layer, later in the file.
 
@@ -74,14 +75,20 @@ Three guards, and the third is the one that matters:
 
 | Class | Purpose |
 | --- | --- |
-| `.contact__mail` | Primary action. Serif-free, large, with an arrow that moves on hover. Centred as a box **and** as an address: an empty `::before` matching the arrow's width balances the row, so the email itself lands on the axis and the arrow hangs off it. |
+| `.contact__mail` | Primary action. Serif-free, large. **The arrow hangs**, so the link box is the address and `margin-inline: auto` centres the address itself. On hover it swells on Archivo's axes, the same gesture as the statement's claims. |
 | `.contact__arr` | Decorative, `aria-hidden`. |
 | `.contact__alt` | LinkedIn, small uppercase. |
 | `.foot` | Top rule, copyright. |
 
-Both contact links keep a typographic box and expand only the hit area, via a 44px-tall `::after`. **They are the only two links on the page; do not let that expander get dropped again.** The `::before` spacer is a flex item; the `::after` hit area is absolutely positioned and so is not one — they do not collide.
+Both contact links keep a typographic box and expand only the hit area, via a 44px-tall `::after`. **They are the only two links on the page; do not let that expander get dropped again.** The email's expander reaches `right: calc(-1 * (0.62em + gap))`, out past the hanging arrow, because the arrow is no longer inside the link's box.
 
-**The email's balancing spacer is dropped below 22rem.** What breaks first on a narrow phone is not the address wrapping: the flex box wraps and the **arrow** drops to its own line underneath. Measured against Archivo, the worst case here (the Helvetica fallback renders this string 2.6px *narrower*), the balanced box is 283.3px, the arrow falls off the line at a 320px viewport and holds at 328px. 22rem keeps a 24px cushion, and costs only 320–351px the 12px of offset.
+**The arrow hangs, for the same reason the statement's punctuation does.** `.contact__arr` is `position: absolute; left: 100%`, so it costs the link no width: the link box is the address, `margin-inline: auto` centres the address on the page axis, and the arrow sits outside it.
+
+It replaced a counterweight — an empty `::before` matching the arrow's width, balancing the flex row from the other side. That centred the address correctly but put the arrow *inside* the focusable box, and the focus ring showed it: measured at 1280, **48.6px of dead space inside the ring on the left**, while the arrow's own hover translate carried it **7.7px outside the ring on the right**. Hanging the arrow fixes the ring, deletes the `::before`, and deletes the `@media (max-width: 22rem)` rule that existed only to drop the counterweight when it no longer fitted.
+
+The email's swell takes the `any-pointer: coarse` guard as well — same block, same reasoning as the statement's claims above.
+
+**The email's hover swell is gated at 30rem**, the same gate the statement's claims take, and for a reason measured on this element: at a 320px viewport the column is 283.2px, the swollen address needs more, and it breaks across two lines and carries the arrow 9px off the right of the screen. It clears comfortably from 30rem up — 299.8px in a 460px column at 500px. Below the gate the address answers in colour and the arrow still moves.
 
 ---
 
@@ -109,9 +116,13 @@ Both contact links keep a typographic box and expand only the hit area, via a 44
 
 **Centred axis (the hero, contact and footer).** Those roles are centred, so they have no flush edge to correct to and carry no side-bearing indent. They have the *other* problem: a centred line is centred on its **box**, and the box holds one letter-space more than the word does, because the tracking is added after the final character and measured in. Verified on the page, not assumed — the `LINKEDIN` box is exactly 8 tracking steps wider than the untracked string, not 7 — so each tracked line hung 0.96px left of the axis the signature sits on. `.hero__role`, `.contact__alt` and `.foot__c` take `text-indent: var(--track-k)`, which moves a centred line by half its own value and, on a shrink-to-fit box, squares LinkedIn's rule around the word as a bonus. Measured spread after: 0.01px.
 
-The two negatively tracked roles, `.hero__stmt` (-0.02em) and `.contact__mail-t` (-0.022em), lean the other way by 0.63px and 0.53px and are deliberately left alone: the correction is a *negative* indent on a shrink-to-fit box, where the intrinsic-width contribution is not interoperable.
+The two negatively tracked roles, `.hero__stmt` (-0.02em) and `.contact__mail-t` (-0.022em), lean the other way by 0.63px and 0.53px and are deliberately left alone: the correction is a *negative* indent on a shrink-to-fit box, where the intrinsic-width contribution is not interoperable. (`.hero__l` does carry a `text-indent`, but that is the punctuation hang below, on a different element and for a different reason. The two do not fight: the letterform runs measure 0.00px off the axis with both in force.)
 
-**Terminal punctuation hangs.** Both statement lines end in a mark carrying 0.257em of advance — 20.56px at the desktop step — and a centred line counts that advance, so the letterforms sat 10.28px left of the axis. Each mark is wrapped in `.hero__hang`, which takes `display: inline-block; width: 0`: **the mark keeps its glyph and gives up its box.** Exact for any mark at any step of a scale that runs 24px to 80px, where a measured negative margin would be wrong the moment the copy or the scale moved. Measured after: both letterform runs centre to 0.00px, leading is byte-identical (139.68px with and without), no overflow.
+**Terminal punctuation hangs, and it is one line of CSS.** Both statement lines end in a mark carrying 0.257em of advance — 20.56px at the desktop step, the same for the comma and the period — and a centred line counts that advance, so the letterforms sat 10.28px left of the axis. `.hero__l` takes `text-indent: 0.257em`, and **a centred line moves by half its own indent**, which is exactly the half-advance the mark was costing. Measured after: both letterform runs centre to 0.00px.
+
+It replaced a `.hero__hang` span holding the mark in a zero-width `inline-block`. That produced identical ink positions and was self-measuring, but a zero-width box is invisible to `::selection`, so selecting the statement left the comma and period as dark ink outside the accent band while the rest of the line was highlighted. The indent keeps the mark in flow, needs no span in the markup at all, and costs one measured constant.
+
+**Re-measure the constant if the copy or the family changes** — it is the terminal mark's advance, not a universal number. It switches itself off below 30rem with no media query needed: `.hero__l` goes `display: inline` there, and `text-indent` does not apply to an inline box.
 
 `hanging-punctuation: allow-end` was not used — it is Safari-only, so it would have centred the sentence differently in different browsers.
 
