@@ -70,8 +70,10 @@
     --rule:      rgba(18, 18, 18, 0.16);
     --rule-2:    rgba(18, 18, 18, 0.09);
     --accent:    #b92f0e;
-    /* hovered text only — the stroke and the underline stay --accent */
-    --accent-deep: color-mix(in srgb, var(--accent) 76%, #000);
+    /* hovered text only — the stroke and the underline stay --accent.
+       Deepened from 76% on 2026-09-21: the hover was reading as a hue
+       shift rather than as the word going down. 7.45:1 -> 9.98:1 on --bg. */
+    --accent-deep: color-mix(in srgb, var(--accent) 58%, #000);
     --accent-in: #ffffff;
     --focus:     #b92f0e;
 
@@ -113,7 +115,14 @@
       --rule:   rgba(242, 239, 233, 0.18);
       --rule-2: rgba(242, 239, 233, 0.09);
       --accent: #ff6a3d;
-      --accent-deep: color-mix(in srgb, var(--accent) 82%, #000);
+      /* Deepened by going the OTHER way, 2026-09-21. --accent-deep means
+         "further from the page than the accent", and on a near-black
+         ground more black is dimmer, not deeper: 82% measured 4.67:1 and
+         the next step down crossed the 4.5:1 floor at 3.75:1. Mixed with
+         white instead, 7.54:1, which matches the light side's 9.98:1 in
+         how far the hover travels. The stroke under the word stays
+         --accent, so the word lands a step lighter than its own stroke. */
+      --accent-deep: color-mix(in srgb, var(--accent) 88%, #fff);
       --accent-in: #0f0f10;
       --focus:  #ff6a3d;
       color-scheme: dark;
@@ -179,10 +188,10 @@
      so it sits with it: tight under the hand, then the full gap before
      the statement takes over. */
   /* ── Hero: the name as type, set to fill the page ─────────────────── */
-  .hero { padding: clamp(var(--s-7), 8vw, var(--s-9)) 0 var(--gap-section); }
+  .hero { padding: clamp(var(--s-7), 8vw, var(--s-9)) 0 var(--gap-section); text-align: center; }
 
   .hero__name { margin: 0 0 clamp(var(--s-3), 1.4vw, var(--s-4)); }
-  .hero__sig { display: block; width: min(100%, clamp(11rem, 27cqi, 22rem)); }
+  .hero__sig { display: block; width: min(100%, clamp(11rem, 27cqi, 22rem)); margin-inline: auto; }
   .hero__sig svg { display: block; width: 100%; height: auto; color: var(--ink); }
 
   .hero__role {
@@ -229,6 +238,21 @@
   .hero__l { display: block; }
   @media (max-width: 30rem) { .hero__l { display: inline; } }
 
+  /* Terminal punctuation hangs. Both authored lines end in a mark carrying
+     0.257em of advance — 20.56px at the desktop step — and a centred line
+     counts that advance, so the letterforms sat 10.28px left of the axis
+     the signature is centred on, on both lines equally.
+       The mark keeps its glyph and gives up its box. That is exact for any
+     mark at any step of a fluid scale, where a measured negative margin
+     would be wrong the moment the copy or the type scale moved — and this
+     scale runs 24px to 80px.
+       Only while the lines are authored blocks. At 30rem and below they
+     run together as one wrapping sentence and the marks stop being line-
+     terminal, where a zero-width one would sit on the word after it.     */
+  @media (width > 30rem) {
+    .hero__hang { display: inline-block; width: 0; }
+  }
+
   .hero__stmt em {
     font-style: normal;
     font-weight: 620;
@@ -243,28 +267,52 @@
     text-underline-offset: 0.14em;
     text-decoration-skip-ink: auto;
 
-    /* Hover: a heavier stroke draws in beneath the word, left to right, on
-       the same easing curve as the signature above — a hand going back over
-       a line rather than a highlighter box switching on. The hairline fades
-       out underneath it, and the word takes the accent as the stroke lands.
-       Nothing here affects layout, so the sentence never moves. */
-    background-image: linear-gradient(var(--accent), var(--accent));
-    background-repeat: no-repeat;
-    background-position: 0 calc(100% - 0.02em);
-    background-size: 0% 0.12em;
-    box-decoration-break: clone;
-    -webkit-box-decoration-break: clone;
+    /* Hover: the word swells on Archivo's own axes and takes the accent,
+       on the same easing curve as the signature above. Nothing is drawn
+       that was not already type — no bar, no band, no second object. The
+       hairline stays and rides the swell, so the rule widens with the
+       word it belongs to.
+         Weight goes in font-weight and width goes in font-variation-
+       settings, never the other way round: the browser's own font
+       matching reads font-weight, and an axis set only through
+       variation-settings leaves the FALLBACK face at 400.
+         This DOES move layout, deliberately — see the note below. */
     transition:
-      background-size 0.5s cubic-bezier(0.4, 0.05, 0.25, 1),
-      color 0.34s ease 0.1s,
-      text-decoration-color 0.22s ease;
+      font-weight 0.38s cubic-bezier(0.4, 0.05, 0.25, 1),
+      font-variation-settings 0.38s cubic-bezier(0.4, 0.05, 0.25, 1),
+      color 0.34s ease;
   }
-  @media (hover: hover) {
+  /* The sentence breathes around the hovered word. It is centred, so half
+     the growth goes each way: the words to the left slide left, the words
+     to the right slide right, and the line stays on its axis. That is the
+     effect, not a side effect — every earlier version of this hover was
+     forbidden from touching layout, and this one is built on doing it.
+       Three things keep it from being a lurch rather than a breath:
+       · Only above 30rem. At 30rem and below the two authored lines go
+         inline and become one wrapping sentence, where a swelling word
+         could move the WRAP POINT and reflow the whole statement. Same
+         breakpoint the hanging punctuation uses.
+       · Only on a real pointer. `hover: hover` already gated this, and it
+         matters more now: a tap that resized the sentence would be a bug.
+       · The line has the headroom, measured rather than assumed. Line 2
+         is the long one. Swelling its widest claim takes it to 83.3% of
+         the column at 500px (the tightest point of the block regime,
+         where the type is still on its 7.6cqi ramp), 83.2% at 700px,
+         74.4% at 1280px and 58.6% at 1600px. Worst case leaves a sixth
+         of the column spare, so the swell can never push the sentence
+         into a re-wrap or past the gutter. Re-measure if the copy grows:
+         the guard is the measurement, not the breakpoint. */
+  @media (hover: hover) and (width > 30rem) {
     .hero__stmt em:hover {
-      background-size: 100% 0.12em;
+      font-weight: 780;
+      font-variation-settings: 'wdth' 118;
       color: var(--accent-deep);
-      text-decoration-color: transparent;
     }
+  }
+  /* Below the breakpoint the claims still answer to the pointer, in colour
+     only. The mark at rest is the underline, which is set for everyone. */
+  @media (hover: hover) and (width <= 30rem) {
+    .hero__stmt em:hover { color: var(--accent-deep); }
   }
 
   /* ── Section marks ────────────────────────────────────────────────── */
@@ -377,15 +425,34 @@
      zero), while type carries a left side bearing that grows with size —
      the 63px statement sat 5.35px inside it. Measured per role in em, so
      the correction survives every step of the scale.
-       reference = the signature's ink edge                              */
-  .hero__role     { text-indent: -0.076em; }
-  .hero__stmt     { text-indent: -0.084em; }
+       reference = the signature's ink edge
+
+     Only the flush-left roles take it now. A centred line has no flush edge
+     to correct to, and text-indent still shortens its line box, so the hero,
+     the email, LinkedIn and the footer would each drift half the indent left
+     for nothing. A centred line's side bearings cancel against each other. */
   .sec            { text-indent: -0.076em; }
   .entry__t       { text-indent: -0.076em; }
   .entry__d       { text-indent: -0.019em; }
-  .contact__mail-t{ text-indent: -0.065em; }
-  .contact__alt   { text-indent: -0.076em; }
-  .foot__c        { text-indent: -0.027em; }
+
+  /* ── Centred axis ────────────────────────────────────────────────────
+     A centred line is centred on its BOX, and the box carries one letter-
+     space more than the word does: the tracking is added after the final
+     character and measured in. Checked on the page rather than assumed —
+     the LINKEDIN box is exactly 8 tracking steps wider than the untracked
+     string, not 7 — so every tracked line here hangs half a step, 0.96px
+     at --t-xs, left of the axis the signature sits on. On a centred line
+     text-indent moves the text by half its own value; on a shrink-to-fit
+     box it grows the box and the text together to the same end, and it
+     squares LinkedIn's rule around the word while it is there.
+       The two negatively tracked roles, the statement (-0.02em) and the
+     email (-0.022em), lean the other way by 0.63px and 0.53px. They are
+     left alone: the correction would be a NEGATIVE indent on a shrink-to-
+     fit box, where the intrinsic-width contribution is not interoperable,
+     and that is a worse trade than half a pixel.                       */
+  .hero__role     { text-indent: var(--track-k); }
+  .contact__alt   { text-indent: var(--track-k); }
+  .foot__c        { text-indent: var(--track-k); }
   /* .entry__yr is a flex container, and text-indent does not reach flex
      items — it takes the correction as a margin instead. */
   .entry__yr      { margin-left: -0.051em; }
@@ -394,10 +461,10 @@
   .contact { padding-top: var(--gap-section); }
 
   .contact__mail {
-    display: flex; align-items: center; flex-wrap: wrap;
+    display: flex; align-items: center; justify-content: center; flex-wrap: wrap;
     gap: 0 clamp(var(--s-3), 1.6cqi, var(--s-5));
     width: fit-content; max-width: 100%;
-    margin-top: clamp(var(--s-5), 3vw, var(--s-7));
+    margin: clamp(var(--s-5), 3vw, var(--s-7)) auto 0;
     font-size: var(--t-mail);
     font-weight: 600;
     font-variation-settings: 'wdth' 104;
@@ -419,6 +486,21 @@
     width: 0.62em; height: 0.62em; flex: none;
     transition: transform var(--med) var(--ease), color var(--fast) var(--ease);
   }
+  /* The arrow is a trailing mark, not part of the address. Centring the flex
+     box on its own would carry the email — the thing the eye reads as centred
+     — left by half the arrow plus its gap. A matching empty item on the other
+     side puts the address itself on the page's axis and lets the arrow hang
+     off it.
+       It is dropped on the narrowest phones, because the thing that breaks
+     first is not the address wrapping: the flex box wraps and the ARROW
+     drops to its own line under the email. Measured against Archivo, which
+     is the worst case here — the Helvetica fallback renders this string
+     2.6px narrower, not wider — the balanced box is 283.3px and the arrow
+     falls off the line at 320px viewport and holds at 328px. 22rem keeps a
+     24px cushion over that, and costs only 320-351px the 12px of offset. */
+  .contact__mail::before { content: ''; width: 0.62em; flex: none; }
+  @media (max-width: 22rem) { .contact__mail::before { content: none; } }
+
   .contact__mail:hover, .contact__mail:focus-visible { color: var(--accent-deep); }
   .contact__mail:hover .contact__mail-t, .contact__mail:focus-visible .contact__mail-t { background-size: 100% 0.07em; }
   .contact__mail:hover .contact__arr, .contact__mail:focus-visible .contact__arr { transform: translate(0.16em, -0.16em); }
@@ -436,8 +518,9 @@
   }
 
   .contact__alt {
-    display: inline-block;
-    margin-top: clamp(var(--s-5), 2.4vw, var(--s-6));
+    display: block;
+    width: fit-content;
+    margin: clamp(var(--s-5), 2.4vw, var(--s-6)) auto 0;
     padding-bottom: 0.25em;
     font-size: var(--t-xs);
     font-weight: 600;
@@ -452,7 +535,7 @@
 
   /* ── Foot: the signature, at signature size ───────────────────────── */
   .foot {
-    display: flex; align-items: baseline; flex-wrap: wrap; gap: 0.35em var(--s-5);
+    display: flex; align-items: baseline; justify-content: center; flex-wrap: wrap; gap: 0.35em var(--s-5);
     margin-top: clamp(var(--s-8), 8vw, var(--s-9));
     padding: var(--s-5) 0 clamp(var(--s-5), 3vw, var(--s-7));
     border-top: 1px solid var(--rule);
@@ -489,5 +572,15 @@
     *, *::before, *::after { animation: none !important; transition: none !important; }
     .reveal { opacity: 1; translate: 0 0; }
     .hero__sig { mask-image: none; -webkit-mask-image: none; }
+    /* Killing the transition would leave the swell as a SNAP: the sentence
+       would jump to a new width on pointer-enter and back on leave. An
+       instant resize under the cursor is exactly what this setting is
+       asking us not to do, so the axes stop moving here and the claim
+       answers in colour alone. */
+    .hero__stmt em:hover {
+      font-weight: 620;
+      font-variation-settings: 'wdth' 100;
+      color: var(--accent-deep);
+    }
   }
 }
