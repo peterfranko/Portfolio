@@ -18,6 +18,6 @@ Present Peter as a product designer in NYC. **Do not assert a current employer**
 
 **This site's design tokens are its own.** They are not shared with, mirrored to, or derived from Studio Spreza. Peter's decision on 2026-09-08: the site is meant to be meaningfully distinct from all Studio Spreza work. `--ink-3` is the contrast floor and must stay at or above 4.5:1 on **both** `--bg` and `--bg-2` in both schemes; small type sits on the hover band as well as the page. (Token names changed with the 2026-09-21 rebuild; the rule is unchanged.)
 
-Router: `/Users/peter/Developer/AGENTS.md`. Copy: `@portfolio-site-copy`.
+Router: `/Users/peter/Developer/AGENTS.md`. Copy: `/portfolio-site-copy`.
 
-**Before done:** `@compass-update-check` if public positioning or contact strategy changed.
+**Before done:** apply `CLAUDE.md` → Before done (or `/finish-up`) if public positioning or contact strategy changed.
